@@ -2,99 +2,264 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>接住小星星</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>星果切切乐</title>
   <style>
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    :root {
+      --glass: rgba(255, 255, 255, .14);
+      --glass-2: rgba(255, 255, 255, .22);
+      --text: #ffffff;
+      --muted: rgba(255,255,255,.76);
+      --danger: #ff5e7a;
+      --gold: #ffd56a;
+      --cyan: #91fff5;
+    }
+
     body {
       margin: 0;
       min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
-      align-items: center;
       justify-content: center;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top, #203a74, #101527 60%, #090b14);
-      color: white;
+      align-items: center;
       overflow: hidden;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 15%, rgba(112, 241, 255, .24), transparent 28%),
+        radial-gradient(circle at 86% 8%, rgba(255, 212, 106, .22), transparent 26%),
+        radial-gradient(circle at 70% 88%, rgba(255, 94, 122, .16), transparent 30%),
+        linear-gradient(160deg, #121936 0%, #0b1024 50%, #050612 100%);
     }
 
-    .wrap {
-      width: min(94vw, 760px);
+    body::before {
+      content: "";
+      position: fixed;
+      inset: -20%;
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,.8) 0 1px, transparent 2px),
+        radial-gradient(circle, rgba(255,255,255,.35) 0 1px, transparent 2px);
+      background-size: 80px 80px, 130px 130px;
+      animation: starDrift 18s linear infinite;
+      pointer-events: none;
+      opacity: .45;
+    }
+
+    @keyframes starDrift {
+      from { transform: translate3d(0,0,0) rotate(0deg); }
+      to { transform: translate3d(-60px, 70px, 0) rotate(4deg); }
+    }
+
+    .app {
+      position: relative;
+      width: min(96vw, 920px);
+      height: min(94vh, 760px);
+      height: min(94dvh, 760px);
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      gap: 10px;
+      z-index: 1;
+      padding: 12px;
+    }
+
+    header {
+      position: relative;
       text-align: center;
     }
 
     h1 {
-      margin: 0 0 10px;
-      font-size: clamp(30px, 5vw, 54px);
-      letter-spacing: 2px;
+      margin: 0;
+      font-size: clamp(32px, 6vw, 60px);
+      line-height: 1;
+      letter-spacing: 3px;
+      text-shadow: 0 8px 28px rgba(0,0,0,.35);
     }
 
-    .hint {
-      margin: 0 0 18px;
-      opacity: .82;
-      line-height: 1.6;
+    .subtitle {
+      margin: 8px auto 0;
+      max-width: 720px;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: clamp(14px, 2.4vw, 17px);
     }
 
-    .panel {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 12px;
-      font-weight: 700;
-      flex-wrap: wrap;
+    .lang-toggle {
+      position: absolute;
+      right: 0;
+      top: 0;
+      border: 1px solid rgba(255,255,255,.24);
+      border-radius: 999px;
+      color: white;
+      background: rgba(255,255,255,.14);
+      backdrop-filter: blur(14px);
+      padding: 9px 13px;
+      cursor: pointer;
+      font-weight: 900;
+      box-shadow: 0 10px 28px rgba(0,0,0,.2);
+    }
+
+    .mode-bar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .mode-btn, .action-btn {
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 18px;
+      color: white;
+      background: var(--glass);
+      backdrop-filter: blur(14px);
+      padding: 12px 10px;
+      cursor: pointer;
+      box-shadow: 0 12px 30px rgba(0,0,0,.18);
+      transition: transform .15s ease, background .15s ease, border-color .15s ease;
+      font-weight: 800;
+    }
+
+    .mode-btn small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 12px;
+    }
+
+    .mode-btn.active {
+      background: linear-gradient(135deg, rgba(145,255,245,.34), rgba(255,213,106,.24));
+      border-color: rgba(255,255,255,.42);
+      transform: translateY(-2px);
+    }
+
+    .hud {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
     }
 
     .badge {
-      flex: 1;
-      min-width: 130px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, .12);
-      border: 1px solid rgba(255, 255, 255, .18);
-      backdrop-filter: blur(10px);
+      border-radius: 18px;
+      padding: 10px;
+      background: rgba(255,255,255,.13);
+      border: 1px solid rgba(255,255,255,.18);
+      backdrop-filter: blur(12px);
+      text-align: center;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.12);
     }
 
-    #game {
+    .badge span {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 3px;
+    }
+
+    .badge strong {
+      font-size: clamp(18px, 3vw, 26px);
+    }
+
+    #arena {
       position: relative;
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      min-height: 360px;
-      border-radius: 26px;
       overflow: hidden;
+      border-radius: 28px;
+      border: 1px solid rgba(255,255,255,.22);
       background:
-        radial-gradient(circle at 18% 25%, rgba(255,255,255,.16), transparent 4%),
-        radial-gradient(circle at 82% 18%, rgba(255,255,255,.13), transparent 3%),
-        linear-gradient(180deg, rgba(77, 103, 194, .48), rgba(15, 22, 52, .95));
-      border: 1px solid rgba(255, 255, 255, .2);
-      box-shadow: 0 24px 80px rgba(0,0,0,.45);
+        radial-gradient(circle at 20% 20%, rgba(145,255,245,.12), transparent 24%),
+        radial-gradient(circle at 84% 28%, rgba(255,213,106,.10), transparent 24%),
+        linear-gradient(180deg, rgba(31,43,93,.84), rgba(4,7,22,.96));
+      box-shadow: 0 28px 80px rgba(0,0,0,.42);
       touch-action: none;
-    }
-
-    #player {
-      position: absolute;
-      bottom: 18px;
-      left: 50%;
-      width: 96px;
-      height: 26px;
-      transform: translateX(-50%);
-      border-radius: 999px;
-      background: linear-gradient(90deg, #9ffcff, #ffffff, #ffd36b);
-      box-shadow: 0 0 25px rgba(159, 252, 255, .65);
-    }
-
-    .star {
-      position: absolute;
-      width: 26px;
-      height: 26px;
-      transform: translate(-50%, -50%);
-      font-size: 26px;
-      line-height: 26px;
-      filter: drop-shadow(0 0 10px rgba(255, 231, 93, .8));
       user-select: none;
+      cursor: crosshair;
     }
 
-    .bomb {
-      filter: drop-shadow(0 0 10px rgba(255, 80, 80, .85));
+    #arena::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(transparent 97%, rgba(255,255,255,.06) 98%), linear-gradient(90deg, transparent 97%, rgba(255,255,255,.04) 98%);
+      background-size: 42px 42px;
+      opacity: .45;
+      pointer-events: none;
+    }
+
+    .item {
+      position: absolute;
+      width: var(--size);
+      height: var(--size);
+      display: grid;
+      place-items: center;
+      font-size: calc(var(--size) * .82);
+      transform: translate(-50%, -50%) rotate(var(--rot));
+      filter: drop-shadow(0 8px 12px rgba(0,0,0,.32));
+      will-change: transform, left, top;
+      z-index: 2;
+    }
+
+    .item.good { animation: floatPulse 1.1s ease-in-out infinite alternate; }
+    .item.bad { animation: dangerPulse .55s ease-in-out infinite alternate; }
+
+    @keyframes floatPulse {
+      to { filter: drop-shadow(0 0 18px rgba(255,213,106,.72)); }
+    }
+
+    @keyframes dangerPulse {
+      from { filter: drop-shadow(0 0 8px rgba(255,94,122,.55)); }
+      to { filter: drop-shadow(0 0 22px rgba(255,94,122,.95)); }
+    }
+
+    .slash {
+      position: absolute;
+      height: 7px;
+      border-radius: 999px;
+      transform-origin: left center;
+      background: linear-gradient(90deg, transparent, rgba(145,255,245,.95), white, rgba(255,213,106,.9), transparent);
+      box-shadow: 0 0 18px rgba(145,255,245,.85);
+      pointer-events: none;
+      z-index: 7;
+      animation: fadeSlash .28s ease-out forwards;
+    }
+
+    @keyframes fadeSlash {
+      from { opacity: 1; transform: rotate(var(--angle)) scaleX(1); }
+      to { opacity: 0; transform: rotate(var(--angle)) scaleX(.38); }
+    }
+
+    .pop {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      z-index: 8;
+      pointer-events: none;
+      font-weight: 900;
+      font-size: 24px;
+      text-shadow: 0 4px 16px rgba(0,0,0,.45);
+      animation: popUp .7s ease-out forwards;
+    }
+
+    @keyframes popUp {
+      from { opacity: 0; transform: translate(-50%, -35%) scale(.7); }
+      25% { opacity: 1; }
+      to { opacity: 0; transform: translate(-50%, -120%) scale(1.18); }
+    }
+
+    .particle {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--pcolor);
+      pointer-events: none;
+      z-index: 6;
+      animation: burst .52s ease-out forwards;
+    }
+
+    @keyframes burst {
+      to {
+        opacity: 0;
+        transform: translate(var(--dx), var(--dy)) scale(.1);
+      }
     }
 
     .overlay {
@@ -102,245 +267,562 @@
       inset: 0;
       display: grid;
       place-items: center;
-      background: rgba(4, 7, 18, .68);
-      backdrop-filter: blur(5px);
-      padding: 24px;
+      padding: 20px;
+      z-index: 10;
+      background: rgba(2, 4, 16, .62);
+      backdrop-filter: blur(8px);
     }
 
     .card {
-      width: min(92%, 430px);
+      width: min(92%, 520px);
       padding: 28px;
-      border-radius: 26px;
-      background: rgba(255, 255, 255, .13);
-      border: 1px solid rgba(255, 255, 255, .22);
-      box-shadow: 0 20px 60px rgba(0,0,0,.35);
+      border-radius: 30px;
+      background: rgba(255,255,255,.16);
+      border: 1px solid rgba(255,255,255,.24);
+      box-shadow: 0 24px 70px rgba(0,0,0,.36);
+      text-align: center;
     }
 
     .card h2 {
-      margin: 0 0 12px;
-      font-size: 32px;
+      margin: 0 0 8px;
+      font-size: clamp(30px, 6vw, 48px);
     }
 
     .card p {
-      margin: 8px 0 20px;
+      margin: 10px auto 18px;
       line-height: 1.7;
-      opacity: .88;
+      color: rgba(255,255,255,.86);
     }
 
-    button {
-      border: 0;
+    .action-row {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .action-btn {
       border-radius: 999px;
-      padding: 13px 24px;
+      padding: 14px 24px;
+      background: linear-gradient(90deg, #91fff5, #fff3aa, #ffd56a);
+      color: #121936;
+      border: 0;
       font-size: 16px;
-      font-weight: 800;
-      color: #101527;
-      cursor: pointer;
-      background: linear-gradient(90deg, #9ffcff, #ffd36b);
-      box-shadow: 0 10px 30px rgba(255, 211, 107, .28);
+      box-shadow: 0 12px 34px rgba(255,213,106,.25);
     }
 
-    button:active { transform: translateY(1px); }
+    .secondary {
+      background: rgba(255,255,255,.14);
+      color: white;
+      border: 1px solid rgba(255,255,255,.22);
+      box-shadow: none;
+    }
 
-    @media (max-width: 560px) {
-      #game { min-height: 480px; aspect-ratio: 9 / 13; }
-      #player { width: 82px; }
-      .hint { font-size: 14px; }
+    .shake { animation: shake .22s ease-in-out; }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      25% { transform: translateX(-9px); }
+      75% { transform: translateX(9px); }
+    }
+
+    @media (max-width: 620px) {
+      body { align-items: flex-start; overflow: auto; }
+      .app {
+        width: 100vw;
+        min-height: 100dvh;
+        height: auto;
+        padding: 10px;
+        gap: 8px;
+      }
+
+      h1 { font-size: 38px; padding: 0 68px; }
+      .lang-toggle { top: 1px; right: 2px; padding: 8px 10px; font-size: 13px; }
+      .subtitle { font-size: 14px; margin-top: 6px; }
+      .mode-bar { grid-template-columns: 1fr; gap: 7px; }
+      .mode-btn { padding: 9px; border-radius: 15px; }
+      .mode-btn small { display: inline; margin-left: 6px; }
+      .hud { grid-template-columns: repeat(2, 1fr); gap: 7px; }
+      .badge { padding: 8px; border-radius: 15px; }
+      #arena { height: 58dvh; min-height: 390px; border-radius: 24px; }
+      .card { padding: 22px; }
     }
   </style>
 </head>
 <body>
-  <main class="wrap">
-    <h1>接住小星星</h1>
-    <p class="hint">左右移动接住星星 ⭐，避开炸弹 💣。电脑用鼠标或方向键，手机直接拖动。</p>
+  <main class="app">
+    <header>
+      <button class="lang-toggle" id="langBtn">EN</button>
+      <h1 id="title">星果切切乐</h1>
+      <p class="subtitle" id="subtitle">像切水果一样划过星果得分，千万别切到炸弹。可选择计时赛、竞速赛和持久赛。</p>
+    </header>
 
-    <div class="panel">
-      <div class="badge">分数：<span id="score">0</span></div>
-      <div class="badge">生命：<span id="lives">3</span></div>
-      <div class="badge">时间：<span id="time">45</span>s</div>
-    </div>
+    <section class="mode-bar" aria-label="游戏模式选择">
+      <button class="mode-btn active" data-mode="time"><span class="mode-title"></span> <small class="mode-desc"></small></button>
+      <button class="mode-btn" data-mode="speed"><span class="mode-title"></span> <small class="mode-desc"></small></button>
+      <button class="mode-btn" data-mode="endless"><span class="mode-title"></span> <small class="mode-desc"></small></button>
+    </section>
 
-    <section id="game" aria-label="接住小星星游戏区域">
-      <div id="player"></div>
+    <section class="hud">
+      <div class="badge"><span id="scoreLabel">分数</span><strong id="score">0</strong></div>
+      <div class="badge"><span id="livesLabel">生命</span><strong id="lives">3</strong></div>
+      <div class="badge"><span id="goalLabel">时间</span><strong id="timer">60s</strong></div>
+      <div class="badge"><span id="comboLabel">连击</span><strong id="combo">x1</strong></div>
+    </section>
+
+    <section id="arena" aria-label="游戏区域">
       <div id="overlay" class="overlay">
         <div class="card">
-          <h2>准备好了吗？</h2>
-          <p>接住星星得分，碰到炸弹会扣生命。45 秒内尽量拿高分！</p>
-          <button id="startBtn">开始游戏</button>
+          <h2 id="cardTitle">准备开切！</h2>
+          <p id="modeIntro">计时赛：60 秒内尽量切更多星果。按住并滑动鼠标或手指，划过目标即可得分。</p>
+          <div class="action-row">
+            <button class="action-btn" id="startBtn">开始游戏</button>
+          </div>
         </div>
       </div>
     </section>
   </main>
 
   <script>
-    const game = document.getElementById('game');
-    const player = document.getElementById('player');
-    const scoreEl = document.getElementById('score');
-    const livesEl = document.getElementById('lives');
-    const timeEl = document.getElementById('time');
+    const arena = document.getElementById('arena');
     const overlay = document.getElementById('overlay');
     const startBtn = document.getElementById('startBtn');
+    const langBtn = document.getElementById('langBtn');
+    const titleEl = document.getElementById('title');
+    const subtitleEl = document.getElementById('subtitle');
+    const cardTitle = document.getElementById('cardTitle');
+    const scoreEl = document.getElementById('score');
+    const livesEl = document.getElementById('lives');
+    const timerEl = document.getElementById('timer');
+    const comboEl = document.getElementById('combo');
+    const scoreLabel = document.getElementById('scoreLabel');
+    const livesLabel = document.getElementById('livesLabel');
+    const comboLabel = document.getElementById('comboLabel');
+    const goalLabel = document.getElementById('goalLabel');
+    const modeIntro = document.getElementById('modeIntro');
+    const modeButtons = [...document.querySelectorAll('.mode-btn')];
 
+    const text = {
+      zh: {
+        htmlLang: 'zh-CN',
+        pageTitle: '星果切切乐',
+        title: '星果切切乐',
+        langBtn: 'EN',
+        subtitle: '像切水果一样划过星果得分，千万别切到炸弹。可选择计时赛、竞速赛和持久赛。',
+        modes: {
+          time: { title: '计时赛', desc: '60 秒冲高分', intro: '计时赛：60 秒内尽量切更多星果。按住并滑动鼠标或手指，划过目标即可得分。' },
+          speed: { title: '竞速赛', desc: '最快切满 30 个', intro: '竞速赛：目标是最快切到 30 个星果，切到炸弹会扣时间和生命。' },
+          endless: { title: '持久赛', desc: '越玩越快', intro: '持久赛：没有固定时间，星果会越来越快，看看你能坚持多久。' }
+        },
+        score: '分数',
+        lives: '生命',
+        time: '时间',
+        goal: '目标',
+        survival: '坚持',
+        combo: '连击',
+        ready: '准备开切！',
+        start: '开始游戏',
+        again: '再玩一次',
+        menu: '换模式',
+        chooseMode: '选择模式',
+        timeUp: '时间到！',
+        noLives: '生命用完啦！',
+        bomb: '炸弹爆炸！',
+        complete: '目标完成！',
+        lifeLost: '-生命',
+        scoreResult: score => `你的最终分数是 <strong>${score}</strong>。`,
+        comboResult: (score, combo) => `你的最终分数是 <strong>${score}</strong>，最高连击到 <strong>x${combo}</strong>。`,
+        speedResult: (elapsed, score) => `完成 30 个目标，用时 <strong>${elapsed}</strong> 秒！最终分数 <strong>${score}</strong>。`,
+        endlessResult: (elapsed, score) => `你坚持了 <strong>${Math.floor(elapsed)}</strong> 秒，最终分数 <strong>${score}</strong>。`
+      },
+      en: {
+        htmlLang: 'en',
+        pageTitle: 'Star Slice Rush',
+        title: 'Star Slice Rush',
+        langBtn: '中文',
+        subtitle: 'Slice stars and fruit like a fruit-slicing game, but avoid the bombs. Choose Time Attack, Speed Run, or Survival.',
+        modes: {
+          time: { title: 'Time Attack', desc: 'Score high in 60s', intro: 'Time Attack: slice as many stars and fruit as you can in 60 seconds. Hold and swipe with your mouse or finger to score.' },
+          speed: { title: 'Speed Run', desc: 'Slice 30 fast', intro: 'Speed Run: slice 30 targets as fast as possible. Bombs cost lives and add a time penalty.' },
+          endless: { title: 'Survival', desc: 'Gets faster', intro: 'Survival: no fixed time limit. The game gets faster and faster, so survive as long as you can.' }
+        },
+        score: 'Score',
+        lives: 'Lives',
+        time: 'Time',
+        goal: 'Goal',
+        survival: 'Survive',
+        combo: 'Combo',
+        ready: 'Ready to Slice!',
+        start: 'Start Game',
+        again: 'Play Again',
+        menu: 'Change Mode',
+        chooseMode: 'Choose Mode',
+        timeUp: 'Time Up!',
+        noLives: 'No Lives Left!',
+        bomb: 'Bomb Blast!',
+        complete: 'Goal Complete!',
+        lifeLost: '-Life',
+        scoreResult: score => `Your final score is <strong>${score}</strong>.`,
+        comboResult: (score, combo) => `Your final score is <strong>${score}</strong>, with a best combo of <strong>x${combo}</strong>.`,
+        speedResult: (elapsed, score) => `You sliced all 30 targets in <strong>${elapsed}</strong> seconds! Final score: <strong>${score}</strong>.`,
+        endlessResult: (elapsed, score) => `You survived for <strong>${Math.floor(elapsed)}</strong> seconds. Final score: <strong>${score}</strong>.`
+      }
+    };
+
+    const fruitList = ['⭐', '🌟', '🍎', '🍊', '🍉', '🍓', '🍍', '🥝'];
+    let lang = localStorage.getItem('starSliceLang') || 'zh';
+    let mode = 'time';
+    let running = false;
     let score = 0;
     let lives = 3;
-    let timeLeft = 45;
-    let playerX = 0;
-    let running = false;
-    let objects = [];
+    let combo = 1;
+    let bestCombo = 1;
+    let comboTimer = 0;
+    let timeLeft = 60;
+    let elapsed = 0;
+    let targetCut = 30;
+    let cutCount = 0;
+    let items = [];
+    let lastFrame = 0;
     let lastSpawn = 0;
-    let lastTime = 0;
+    let spawnEvery = 850;
+    let slicing = false;
+    let lastPoint = null;
     let timerId = null;
-    let keyDirection = 0;
+    let rafId = null;
 
-    function clamp(value, min, max) {
-      return Math.max(min, Math.min(max, value));
+    function t() { return text[lang]; }
+    function rect() { return arena.getBoundingClientRect(); }
+    function rand(min, max) { return Math.random() * (max - min) + min; }
+    function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+    function applyLanguage() {
+      const copy = t();
+      document.documentElement.lang = copy.htmlLang;
+      document.title = copy.pageTitle;
+      titleEl.textContent = copy.title;
+      subtitleEl.textContent = copy.subtitle;
+      langBtn.textContent = copy.langBtn;
+      scoreLabel.textContent = copy.score;
+      livesLabel.textContent = copy.lives;
+      comboLabel.textContent = copy.combo;
+
+      modeButtons.forEach(btn => {
+        const item = copy.modes[btn.dataset.mode];
+        btn.querySelector('.mode-title').textContent = item.title;
+        btn.querySelector('.mode-desc').textContent = item.desc;
+      });
+
+      const startButton = document.getElementById('startBtn') || document.getElementById('startBtn2');
+      if (startButton) startButton.textContent = copy.start;
+      if (!running) {
+        const h2 = overlay.querySelector('h2');
+        if (h2) h2.textContent = overlay.dataset.result === 'true' ? h2.textContent : copy.ready;
+        const intro = overlay.querySelector('p');
+        if (intro && overlay.dataset.result !== 'true') intro.textContent = copy.modes[mode].intro;
+      }
+      updateHud();
     }
 
-    function gameRect() {
-      return game.getBoundingClientRect();
+    function setMode(nextMode) {
+      if (running) return;
+      mode = nextMode;
+      modeButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.mode === mode));
+      overlay.dataset.result = 'false';
+      modeIntro.textContent = t().modes[mode].intro;
+      updateHud();
     }
 
-    function setPlayerX(x) {
-      const rect = gameRect();
-      const half = player.offsetWidth / 2;
-      playerX = clamp(x, half, rect.width - half);
-      player.style.left = playerX + 'px';
-    }
+    modeButtons.forEach(btn => btn.addEventListener('click', () => setMode(btn.dataset.mode)));
+
+    langBtn.addEventListener('click', () => {
+      lang = lang === 'zh' ? 'en' : 'zh';
+      localStorage.setItem('starSliceLang', lang);
+      applyLanguage();
+    });
 
     function resetGame() {
-      objects.forEach(obj => obj.el.remove());
-      objects = [];
+      items.forEach(item => item.el.remove());
+      items = [];
+      document.querySelectorAll('.slash,.pop,.particle').forEach(el => el.remove());
       score = 0;
-      lives = 3;
-      timeLeft = 45;
+      lives = mode === 'endless' ? 5 : 3;
+      combo = 1;
+      bestCombo = 1;
+      comboTimer = 0;
+      timeLeft = 60;
+      elapsed = 0;
+      cutCount = 0;
+      lastSpawn = 0;
+      spawnEvery = mode === 'speed' ? 620 : 820;
+      updateHud();
+    }
+
+    function updateHud() {
       scoreEl.textContent = score;
       livesEl.textContent = lives;
-      timeEl.textContent = timeLeft;
-      setPlayerX(game.clientWidth / 2);
-      lastSpawn = 0;
-      lastTime = performance.now();
+      comboEl.textContent = 'x' + combo;
+      if (mode === 'time') {
+        goalLabel.textContent = t().time;
+        timerEl.textContent = Math.max(0, Math.ceil(timeLeft)) + 's';
+      }
+      if (mode === 'speed') {
+        goalLabel.textContent = t().goal;
+        timerEl.textContent = cutCount + '/' + targetCut;
+      }
+      if (mode === 'endless') {
+        goalLabel.textContent = t().survival;
+        timerEl.textContent = Math.floor(elapsed) + 's';
+      }
     }
 
-    function spawnObject() {
-      const isBomb = Math.random() < 0.22;
+    function spawnItem() {
+      const r = rect();
+      const isBad = Math.random() < (mode === 'endless' ? .24 : .18);
+      const size = rand(42, 64);
       const el = document.createElement('div');
-      el.className = 'star' + (isBomb ? ' bomb' : '');
-      el.textContent = isBomb ? '💣' : '⭐';
-      const x = Math.random() * (game.clientWidth - 40) + 20;
-      const speed = (isBomb ? 170 : 140) + Math.random() * 120 + score * 0.8;
-      el.style.left = x + 'px';
-      el.style.top = '-30px';
-      game.appendChild(el);
-      objects.push({ el, x, y: -30, speed, type: isBomb ? 'bomb' : 'star' });
-    }
+      el.className = 'item ' + (isBad ? 'bad' : 'good');
+      el.textContent = isBad ? '💣' : pick(fruitList);
+      el.style.setProperty('--size', size + 'px');
+      el.style.setProperty('--rot', rand(-25, 25) + 'deg');
+      arena.appendChild(el);
 
-    function hitTest(obj) {
-      const p = player.getBoundingClientRect();
-      const o = obj.el.getBoundingClientRect();
-      return !(o.right < p.left || o.left > p.right || o.bottom < p.top || o.top > p.bottom);
-    }
+      const fromLeft = Math.random() < .5;
+      const x = fromLeft ? rand(20, r.width * .35) : rand(r.width * .65, r.width - 20);
+      const y = r.height + size;
+      const vx = (fromLeft ? 1 : -1) * rand(40, 155);
+      const power = mode === 'endless' ? Math.min(980, 720 + elapsed * 8) : rand(690, 850);
+      const vy = -power;
 
-    function update(now) {
-      if (!running) return;
-
-      const delta = Math.min((now - lastTime) / 1000, 0.04);
-      lastTime = now;
-
-      if (keyDirection !== 0) {
-        setPlayerX(playerX + keyDirection * 440 * delta);
-      }
-
-      if (now - lastSpawn > Math.max(360, 900 - score * 8)) {
-        spawnObject();
-        lastSpawn = now;
-      }
-
-      for (let i = objects.length - 1; i >= 0; i--) {
-        const obj = objects[i];
-        obj.y += obj.speed * delta;
-        obj.el.style.top = obj.y + 'px';
-
-        if (hitTest(obj)) {
-          obj.el.remove();
-          objects.splice(i, 1);
-          if (obj.type === 'star') {
-            score += 10;
-            scoreEl.textContent = score;
-          } else {
-            lives -= 1;
-            livesEl.textContent = lives;
-            game.animate([
-              { transform: 'translateX(0)' },
-              { transform: 'translateX(-8px)' },
-              { transform: 'translateX(8px)' },
-              { transform: 'translateX(0)' }
-            ], { duration: 180 });
-            if (lives <= 0) endGame('生命用完啦！');
-          }
-        } else if (obj.y > game.clientHeight + 40) {
-          obj.el.remove();
-          objects.splice(i, 1);
-          if (obj.type === 'star') {
-            score = Math.max(0, score - 3);
-            scoreEl.textContent = score;
-          }
-        }
-      }
-
-      requestAnimationFrame(update);
+      items.push({ el, x, y, vx, vy, size, bad: isBad, cut: false, rot: rand(-180, 180), rotSpeed: rand(-220, 220) });
     }
 
     function startGame() {
       resetGame();
       running = true;
+      overlay.dataset.result = 'false';
       overlay.style.display = 'none';
+      modeButtons.forEach(btn => btn.disabled = true);
+      lastFrame = performance.now();
+      clearInterval(timerId);
       timerId = setInterval(() => {
-        timeLeft -= 1;
-        timeEl.textContent = timeLeft;
-        if (timeLeft <= 0) endGame('时间到！');
+        if (!running) return;
+        elapsed += 1;
+        if (mode === 'time') {
+          timeLeft -= 1;
+          if (timeLeft <= 0) endGame(t().timeUp);
+        }
+        updateHud();
       }, 1000);
-      requestAnimationFrame(update);
+      rafId = requestAnimationFrame(loop);
     }
 
     function endGame(title) {
       if (!running) return;
       running = false;
+      slicing = false;
       clearInterval(timerId);
-      overlay.style.display = 'grid';
+      cancelAnimationFrame(rafId);
+      modeButtons.forEach(btn => btn.disabled = false);
+
+      let extra = '';
+      if (mode === 'speed' && cutCount >= targetCut) extra = `<p>${t().speedResult(elapsed, score)}</p>`;
+      else if (mode === 'endless') extra = `<p>${t().endlessResult(elapsed, score)}</p>`;
+      else extra = `<p>${t().comboResult(score, bestCombo)}</p>`;
+
+      overlay.dataset.result = 'true';
       overlay.innerHTML = `
         <div class="card">
           <h2>${title}</h2>
-          <p>你的最终分数是 <strong>${score}</strong>。再来一局，冲击更高分吧！</p>
-          <button id="againBtn">再玩一次</button>
+          ${extra}
+          <div class="action-row">
+            <button class="action-btn" id="againBtn">${t().again}</button>
+            <button class="action-btn secondary" id="menuBtn">${t().menu}</button>
+          </div>
         </div>
       `;
+      overlay.style.display = 'grid';
       document.getElementById('againBtn').addEventListener('click', startGame);
+      document.getElementById('menuBtn').addEventListener('click', showMenu);
     }
 
-    game.addEventListener('pointermove', (event) => {
+    function showMenu() {
+      overlay.dataset.result = 'false';
+      overlay.innerHTML = `
+        <div class="card">
+          <h2>${t().chooseMode}</h2>
+          <p id="modeIntro">${t().modes[mode].intro}</p>
+          <div class="action-row">
+            <button class="action-btn" id="startBtn2">${t().start}</button>
+          </div>
+        </div>
+      `;
+      document.getElementById('startBtn2').addEventListener('click', startGame);
+    }
+
+    function loop(now) {
       if (!running) return;
-      const rect = gameRect();
-      setPlayerX(event.clientX - rect.left);
-    });
+      const dt = Math.min((now - lastFrame) / 1000, .033);
+      lastFrame = now;
 
-    game.addEventListener('pointerdown', (event) => {
+      comboTimer -= dt;
+      if (comboTimer <= 0) combo = 1;
+
+      const difficulty = mode === 'endless' ? Math.min(420, elapsed * 8) : score * .5;
+      const interval = Math.max(mode === 'speed' ? 300 : 360, spawnEvery - difficulty);
+      if (now - lastSpawn > interval) {
+        spawnItem();
+        if (Math.random() < .18) setTimeout(() => running && spawnItem(), 120);
+        lastSpawn = now;
+      }
+
+      for (let i = items.length - 1; i >= 0; i--) {
+        const item = items[i];
+        item.vy += 1250 * dt;
+        item.x += item.vx * dt;
+        item.y += item.vy * dt;
+        item.rot += item.rotSpeed * dt;
+        item.el.style.left = item.x + 'px';
+        item.el.style.top = item.y + 'px';
+        item.el.style.transform = `translate(-50%, -50%) rotate(${item.rot}deg)`;
+
+        if (item.y > arena.clientHeight + item.size + 80) {
+          if (!item.bad && !item.cut) {
+            lives -= 1;
+            combo = 1;
+            arena.classList.add('shake');
+            setTimeout(() => arena.classList.remove('shake'), 240);
+            if (lives <= 0) endGame(t().noLives);
+          }
+          item.el.remove();
+          items.splice(i, 1);
+        }
+      }
+
+      updateHud();
+      rafId = requestAnimationFrame(loop);
+    }
+
+    function pointFromEvent(e) {
+      const r = rect();
+      const touch = e.touches ? e.touches[0] : e;
+      return { x: touch.clientX - r.left, y: touch.clientY - r.top };
+    }
+
+    function distToSegment(px, py, ax, ay, bx, by) {
+      const dx = bx - ax, dy = by - ay;
+      const len2 = dx * dx + dy * dy || 1;
+      let t = ((px - ax) * dx + (py - ay) * dy) / len2;
+      t = Math.max(0, Math.min(1, t));
+      const x = ax + t * dx, y = ay + t * dy;
+      return Math.hypot(px - x, py - y);
+    }
+
+    function drawSlash(a, b) {
+      const length = Math.hypot(b.x - a.x, b.y - a.y);
+      if (length < 8) return;
+      const angle = Math.atan2(b.y - a.y, b.x - a.x) + 'rad';
+      const el = document.createElement('div');
+      el.className = 'slash';
+      el.style.left = a.x + 'px';
+      el.style.top = a.y + 'px';
+      el.style.width = length + 'px';
+      el.style.setProperty('--angle', angle);
+      arena.appendChild(el);
+      setTimeout(() => el.remove(), 300);
+    }
+
+    function sliceBetween(a, b) {
+      drawSlash(a, b);
+      for (let i = items.length - 1; i >= 0; i--) {
+        const item = items[i];
+        if (item.cut) continue;
+        const d = distToSegment(item.x, item.y, a.x, a.y, b.x, b.y);
+        if (d < item.size * .55) cutItem(item, i);
+      }
+    }
+
+    function cutItem(item, index) {
+      item.cut = true;
+      item.el.remove();
+      items.splice(index, 1);
+      burst(item.x, item.y, item.bad ? '#ff5e7a' : '#ffd56a');
+
+      if (item.bad) {
+        lives -= 1;
+        combo = 1;
+        pop(item.x, item.y, t().lifeLost, '#ff8fa3');
+        arena.classList.add('shake');
+        setTimeout(() => arena.classList.remove('shake'), 240);
+        if (mode === 'speed') elapsed += 3;
+        if (lives <= 0) endGame(t().bomb);
+        return;
+      }
+
+      const gain = 10 * combo;
+      score += gain;
+      cutCount += 1;
+      pop(item.x, item.y, '+' + gain, '#fff3aa');
+      combo = Math.min(9, combo + 1);
+      bestCombo = Math.max(bestCombo, combo);
+      comboTimer = .9;
+
+      if (mode === 'speed' && cutCount >= targetCut) endGame(t().complete);
+    }
+
+    function pop(x, y, message, color) {
+      const el = document.createElement('div');
+      el.className = 'pop';
+      el.textContent = message;
+      el.style.left = x + 'px';
+      el.style.top = y + 'px';
+      el.style.color = color;
+      arena.appendChild(el);
+      setTimeout(() => el.remove(), 740);
+    }
+
+    function burst(x, y, color) {
+      for (let i = 0; i < 13; i++) {
+        const el = document.createElement('div');
+        el.className = 'particle';
+        el.style.left = x + 'px';
+        el.style.top = y + 'px';
+        el.style.setProperty('--pcolor', color);
+        el.style.setProperty('--dx', rand(-80, 80) + 'px');
+        el.style.setProperty('--dy', rand(-80, 80) + 'px');
+        arena.appendChild(el);
+        setTimeout(() => el.remove(), 560);
+      }
+    }
+
+    function startSlice(e) {
       if (!running) return;
-      const rect = gameRect();
-      setPlayerX(event.clientX - rect.left);
-    });
+      slicing = true;
+      lastPoint = pointFromEvent(e);
+    }
 
-    window.addEventListener('keydown', (event) => {
-      if (event.key === 'ArrowLeft' || event.key.toLowerCase() === 'a') keyDirection = -1;
-      if (event.key === 'ArrowRight' || event.key.toLowerCase() === 'd') keyDirection = 1;
-    });
+    function moveSlice(e) {
+      if (!running || !slicing) return;
+      e.preventDefault();
+      const p = pointFromEvent(e);
+      sliceBetween(lastPoint, p);
+      lastPoint = p;
+    }
 
-    window.addEventListener('keyup', (event) => {
-      if (['ArrowLeft', 'ArrowRight', 'a', 'd', 'A', 'D'].includes(event.key)) keyDirection = 0;
-    });
+    function endSlice() {
+      slicing = false;
+      lastPoint = null;
+    }
 
-    window.addEventListener('resize', () => setPlayerX(clamp(playerX, player.offsetWidth / 2, game.clientWidth - player.offsetWidth / 2)));
+    arena.addEventListener('pointerdown', startSlice);
+    arena.addEventListener('pointermove', moveSlice);
+    window.addEventListener('pointerup', endSlice);
+    arena.addEventListener('touchstart', startSlice, { passive: false });
+    arena.addEventListener('touchmove', moveSlice, { passive: false });
+    window.addEventListener('touchend', endSlice);
+
     startBtn.addEventListener('click', startGame);
-    setPlayerX(game.clientWidth / 2);
+    setMode('time');
+    applyLanguage();
   </script>
 </body>
 </html>
-
