@@ -8,31 +8,29 @@
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
     :root {
-      --glass: rgba(255, 255, 255, .14);
-      --glass-2: rgba(255, 255, 255, .22);
-      --text: #ffffff;
-      --muted: rgba(255,255,255,.76);
-      --danger: #ff5e7a;
-      --gold: #ffd56a;
+      --text: #fff;
+      --muted: rgba(255,255,255,.72);
+      --glass: rgba(255,255,255,.13);
+      --line: rgba(255,255,255,.22);
+      --gold: #ffd76d;
       --cyan: #91fff5;
+      --danger: #ff5e7a;
     }
 
+    html, body { margin: 0; min-height: 100%; }
+
     body {
-      margin: 0;
       min-height: 100vh;
       min-height: 100dvh;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
       overflow-x: hidden;
       overflow-y: auto;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color: var(--text);
       background:
-        radial-gradient(circle at 12% 15%, rgba(112, 241, 255, .24), transparent 28%),
-        radial-gradient(circle at 86% 8%, rgba(255, 212, 106, .22), transparent 26%),
-        radial-gradient(circle at 70% 88%, rgba(255, 94, 122, .16), transparent 30%),
-        linear-gradient(160deg, #121936 0%, #0b1024 50%, #050612 100%);
+        radial-gradient(circle at 12% 12%, rgba(145,255,245,.22), transparent 26%),
+        radial-gradient(circle at 85% 12%, rgba(255,215,109,.18), transparent 26%),
+        radial-gradient(circle at 80% 90%, rgba(255,94,122,.14), transparent 28%),
+        linear-gradient(160deg, #111a38, #080d21 55%, #050612);
     }
 
     body::before {
@@ -43,137 +41,178 @@
         radial-gradient(circle, rgba(255,255,255,.8) 0 1px, transparent 2px),
         radial-gradient(circle, rgba(255,255,255,.35) 0 1px, transparent 2px);
       background-size: 80px 80px, 130px 130px;
-      animation: starDrift 18s linear infinite;
+      animation: starMove 18s linear infinite;
+      opacity: .42;
       pointer-events: none;
-      opacity: .45;
     }
 
-    @keyframes starDrift {
-      from { transform: translate3d(0,0,0) rotate(0deg); }
-      to { transform: translate3d(-60px, 70px, 0) rotate(4deg); }
+    @keyframes starMove {
+      from { transform: translate(0,0); }
+      to { transform: translate(-70px, 80px); }
     }
 
     .app {
       position: relative;
+      z-index: 1;
       width: min(96vw, 920px);
       min-height: 100vh;
       min-height: 100dvh;
+      margin: 0 auto;
+      padding: 10px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      z-index: 1;
-      padding: 12px;
+      gap: 8px;
     }
 
     header {
       position: relative;
       text-align: center;
+      padding-top: 4px;
     }
 
     h1 {
       margin: 0;
-      font-size: clamp(32px, 6vw, 60px);
-      line-height: 1;
-      letter-spacing: 3px;
-      text-shadow: 0 8px 28px rgba(0,0,0,.35);
+      padding: 0 62px;
+      font-size: clamp(30px, 6vw, 58px);
+      line-height: 1.04;
+      letter-spacing: 2px;
+      text-shadow: 0 8px 28px rgba(0,0,0,.38);
     }
 
-    .subtitle {
-      margin: 8px auto 0;
-      max-width: 720px;
+    .tip {
+      margin: 5px 0 0;
       color: var(--muted);
-      line-height: 1.55;
-      font-size: clamp(14px, 2.4vw, 17px);
+      font-size: clamp(12px, 2.5vw, 16px);
+      line-height: 1.35;
     }
 
-    .lang-toggle {
+    .lang {
       position: absolute;
       right: 0;
-      top: 0;
-      border: 1px solid rgba(255,255,255,.24);
+      top: 4px;
+      border: 1px solid var(--line);
       border-radius: 999px;
-      color: white;
-      background: rgba(255,255,255,.14);
-      backdrop-filter: blur(14px);
-      padding: 9px 13px;
-      cursor: pointer;
+      background: var(--glass);
+      color: #fff;
+      padding: 8px 12px;
       font-weight: 900;
-      box-shadow: 0 10px 28px rgba(0,0,0,.2);
+      cursor: pointer;
+      backdrop-filter: blur(12px);
     }
 
-    .mode-bar {
+    .modes {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    button {
+      font-family: inherit;
+    }
+
+    .mode {
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      background: var(--glass);
+      color: #fff;
+      padding: 12px 8px;
+      font-size: 16px;
+      font-weight: 900;
+      cursor: pointer;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px rgba(0,0,0,.18);
+      transition: transform .14s ease, background .14s ease, border-color .14s ease;
+    }
+
+    .mode.active {
+      background: linear-gradient(135deg, rgba(145,255,245,.34), rgba(255,215,109,.24));
+      border-color: rgba(255,255,255,.46);
+      transform: translateY(-1px);
+    }
+
+    .detail {
+      display: none;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255,255,255,.12);
+      padding: 10px;
+      backdrop-filter: blur(12px);
+      align-items: center;
+      justify-content: space-between;
       gap: 10px;
     }
 
-    .mode-btn, .action-btn {
-      border: 1px solid rgba(255,255,255,.18);
-      border-radius: 18px;
-      color: white;
-      background: var(--glass);
-      backdrop-filter: blur(14px);
-      padding: 12px 10px;
+    .detail.show { display: flex; }
+
+    .detail p {
+      margin: 0;
+      color: rgba(255,255,255,.86);
+      line-height: 1.45;
+      font-size: 14px;
+    }
+
+    .start-small, .main-btn, .ghost-btn {
+      border: 0;
+      border-radius: 999px;
+      padding: 11px 18px;
+      font-weight: 900;
       cursor: pointer;
-      box-shadow: 0 12px 30px rgba(0,0,0,.18);
-      transition: transform .15s ease, background .15s ease, border-color .15s ease;
-      font-weight: 800;
+      white-space: nowrap;
     }
 
-    .mode-btn small {
-      display: block;
-      margin-top: 4px;
-      color: var(--muted);
-      font-weight: 600;
-      font-size: 12px;
+    .start-small, .main-btn {
+      background: linear-gradient(90deg, var(--cyan), #fff1a7, var(--gold));
+      color: #10172f;
+      box-shadow: 0 10px 28px rgba(255,215,109,.22);
     }
 
-    .mode-btn.active {
-      background: linear-gradient(135deg, rgba(145,255,245,.34), rgba(255,213,106,.24));
-      border-color: rgba(255,255,255,.42);
-      transform: translateY(-2px);
+    .ghost-btn {
+      background: rgba(255,255,255,.14);
+      color: #fff;
+      border: 1px solid var(--line);
     }
 
     .hud {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
+      gap: 7px;
     }
 
     .badge {
-      border-radius: 18px;
-      padding: 10px;
-      background: rgba(255,255,255,.13);
-      border: 1px solid rgba(255,255,255,.18);
-      backdrop-filter: blur(12px);
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      background: var(--glass);
+      padding: 7px 4px;
       text-align: center;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.12);
+      backdrop-filter: blur(12px);
     }
 
     .badge span {
       display: block;
-      font-size: 12px;
+      margin-bottom: 2px;
       color: var(--muted);
-      margin-bottom: 3px;
+      font-size: 11px;
     }
 
     .badge strong {
-      font-size: clamp(18px, 3vw, 26px);
+      font-size: clamp(18px, 4.5vw, 27px);
+      line-height: 1;
     }
 
     #arena {
       position: relative;
       flex: 1 1 auto;
-      height: clamp(380px, 58dvh, 520px);
-      min-height: 360px;
+      min-height: 310px;
+      height: 54dvh;
+      max-height: 520px;
       overflow: hidden;
-      border-radius: 28px;
-      border: 1px solid rgba(255,255,255,.22);
+      border: 1px solid var(--line);
+      border-radius: 24px;
       background:
-        radial-gradient(circle at 20% 20%, rgba(145,255,245,.12), transparent 24%),
-        radial-gradient(circle at 84% 28%, rgba(255,213,106,.10), transparent 24%),
-        linear-gradient(180deg, rgba(31,43,93,.84), rgba(4,7,22,.96));
-      box-shadow: 0 28px 80px rgba(0,0,0,.42);
+        radial-gradient(circle at 25% 20%, rgba(145,255,245,.13), transparent 25%),
+        radial-gradient(circle at 80% 30%, rgba(255,215,109,.10), transparent 25%),
+        linear-gradient(180deg, rgba(34,45,92,.82), rgba(4,7,22,.96));
+      box-shadow: 0 20px 70px rgba(0,0,0,.42);
       touch-action: none;
       user-select: none;
       cursor: crosshair;
@@ -183,10 +222,49 @@
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(transparent 97%, rgba(255,255,255,.06) 98%), linear-gradient(90deg, transparent 97%, rgba(255,255,255,.04) 98%);
-      background-size: 42px 42px;
-      opacity: .45;
+      background: linear-gradient(transparent 97%, rgba(255,255,255,.05) 98%), linear-gradient(90deg, transparent 97%, rgba(255,255,255,.04) 98%);
+      background-size: 40px 40px;
+      opacity: .42;
       pointer-events: none;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      display: grid;
+      place-items: center;
+      padding: 16px;
+      background: rgba(2,4,16,.62);
+      backdrop-filter: blur(8px);
+    }
+
+    .card {
+      width: min(92%, 450px);
+      text-align: center;
+      padding: 22px;
+      border-radius: 26px;
+      border: 1px solid rgba(255,255,255,.26);
+      background: rgba(255,255,255,.16);
+      box-shadow: 0 24px 70px rgba(0,0,0,.36);
+    }
+
+    .card h2 {
+      margin: 0 0 8px;
+      font-size: clamp(28px, 7vw, 46px);
+    }
+
+    .card p {
+      margin: 8px auto 16px;
+      color: rgba(255,255,255,.86);
+      line-height: 1.55;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
     }
 
     .item {
@@ -196,54 +274,48 @@
       display: grid;
       place-items: center;
       font-size: calc(var(--size) * .82);
-      transform: translate(-50%, -50%) rotate(var(--rot));
-      filter: drop-shadow(0 8px 12px rgba(0,0,0,.32));
+      transform: translate(-50%, -50%) rotate(0deg);
+      filter: drop-shadow(0 8px 12px rgba(0,0,0,.34));
+      z-index: 3;
       will-change: transform, left, top;
-      z-index: 2;
     }
 
-    .item.good { animation: floatPulse 1.1s ease-in-out infinite alternate; }
-    .item.bad { animation: dangerPulse .55s ease-in-out infinite alternate; }
+    .good { animation: glowGood 1s ease-in-out infinite alternate; }
+    .bad { animation: glowBad .55s ease-in-out infinite alternate; }
 
-    @keyframes floatPulse {
-      to { filter: drop-shadow(0 0 18px rgba(255,213,106,.72)); }
-    }
-
-    @keyframes dangerPulse {
-      from { filter: drop-shadow(0 0 8px rgba(255,94,122,.55)); }
-      to { filter: drop-shadow(0 0 22px rgba(255,94,122,.95)); }
-    }
+    @keyframes glowGood { to { filter: drop-shadow(0 0 18px rgba(255,215,109,.82)); } }
+    @keyframes glowBad { to { filter: drop-shadow(0 0 22px rgba(255,94,122,.95)); } }
 
     .slash {
       position: absolute;
       height: 7px;
       border-radius: 999px;
       transform-origin: left center;
-      background: linear-gradient(90deg, transparent, rgba(145,255,245,.95), white, rgba(255,213,106,.9), transparent);
+      background: linear-gradient(90deg, transparent, var(--cyan), #fff, var(--gold), transparent);
       box-shadow: 0 0 18px rgba(145,255,245,.85);
+      z-index: 8;
       pointer-events: none;
-      z-index: 7;
-      animation: fadeSlash .28s ease-out forwards;
+      animation: slashFade .28s ease-out forwards;
     }
 
-    @keyframes fadeSlash {
+    @keyframes slashFade {
       from { opacity: 1; transform: rotate(var(--angle)) scaleX(1); }
-      to { opacity: 0; transform: rotate(var(--angle)) scaleX(.38); }
+      to { opacity: 0; transform: rotate(var(--angle)) scaleX(.35); }
     }
 
     .pop {
       position: absolute;
+      z-index: 9;
       transform: translate(-50%, -50%);
-      z-index: 8;
-      pointer-events: none;
       font-weight: 900;
-      font-size: 24px;
+      font-size: 23px;
       text-shadow: 0 4px 16px rgba(0,0,0,.45);
-      animation: popUp .7s ease-out forwards;
+      pointer-events: none;
+      animation: popUp .72s ease-out forwards;
     }
 
     @keyframes popUp {
-      from { opacity: 0; transform: translate(-50%, -35%) scale(.7); }
+      from { opacity: 0; transform: translate(-50%, -25%) scale(.7); }
       25% { opacity: 1; }
       to { opacity: 0; transform: translate(-50%, -120%) scale(1.18); }
     }
@@ -254,131 +326,66 @@
       height: 8px;
       border-radius: 999px;
       background: var(--pcolor);
+      z-index: 7;
       pointer-events: none;
-      z-index: 6;
-      animation: burst .52s ease-out forwards;
+      animation: burst .55s ease-out forwards;
     }
 
     @keyframes burst {
-      to {
-        opacity: 0;
-        transform: translate(var(--dx), var(--dy)) scale(.1);
-      }
-    }
-
-    .overlay {
-      position: absolute;
-      inset: 0;
-      display: grid;
-      place-items: center;
-      padding: 20px;
-      z-index: 10;
-      background: rgba(2, 4, 16, .62);
-      backdrop-filter: blur(8px);
-    }
-
-    .card {
-      width: min(92%, 520px);
-      padding: 28px;
-      border-radius: 30px;
-      background: rgba(255,255,255,.16);
-      border: 1px solid rgba(255,255,255,.24);
-      box-shadow: 0 24px 70px rgba(0,0,0,.36);
-      text-align: center;
-    }
-
-    .card h2 {
-      margin: 0 0 8px;
-      font-size: clamp(30px, 6vw, 48px);
-    }
-
-    .card p {
-      margin: 10px auto 18px;
-      line-height: 1.7;
-      color: rgba(255,255,255,.86);
-    }
-
-    .action-row {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .action-btn {
-      border-radius: 999px;
-      padding: 14px 24px;
-      background: linear-gradient(90deg, #91fff5, #fff3aa, #ffd56a);
-      color: #121936;
-      border: 0;
-      font-size: 16px;
-      box-shadow: 0 12px 34px rgba(255,213,106,.25);
-    }
-
-    .secondary {
-      background: rgba(255,255,255,.14);
-      color: white;
-      border: 1px solid rgba(255,255,255,.22);
-      box-shadow: none;
+      to { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(.1); }
     }
 
     .shake { animation: shake .22s ease-in-out; }
     @keyframes shake {
       0%,100% { transform: translateX(0); }
-      25% { transform: translateX(-9px); }
-      75% { transform: translateX(9px); }
+      25% { transform: translateX(-8px); }
+      75% { transform: translateX(8px); }
     }
 
     @media (max-width: 620px) {
-      .app {
-        width: 100vw;
-        min-height: 100dvh;
-        padding: 8px;
-        gap: 6px;
-      }
-
-      h1 { font-size: 30px; padding: 0 58px; letter-spacing: 1px; }
-      .lang-toggle { top: 0; right: 0; padding: 7px 9px; font-size: 12px; }
-      .subtitle { font-size: 12px; margin-top: 4px; line-height: 1.35; }
-      .mode-bar { grid-template-columns: 1fr; gap: 5px; }
-      .mode-btn { padding: 7px; border-radius: 13px; font-size: 13px; }
-      .mode-btn small { display: inline; margin-left: 6px; font-size: 11px; }
-      .hud { grid-template-columns: repeat(4, 1fr); gap: 5px; }
-      .badge { padding: 6px 4px; border-radius: 13px; }
-      .badge span { font-size: 10px; margin-bottom: 1px; }
-      .badge strong { font-size: 18px; }
-      #arena {
-        flex: none;
-        height: 50dvh;
-        min-height: 300px;
-        max-height: 420px;
-        border-radius: 20px;
-      }
+      .app { width: 100vw; padding: 8px; gap: 6px; }
+      h1 { font-size: 29px; padding: 0 56px; letter-spacing: 1px; }
+      .tip { font-size: 12px; }
+      .lang { padding: 7px 9px; font-size: 12px; }
+      .modes { gap: 5px; }
+      .mode { padding: 9px 3px; font-size: 14px; border-radius: 13px; }
+      .detail { padding: 8px; border-radius: 14px; }
+      .detail p { font-size: 12px; }
+      .start-small { padding: 9px 11px; font-size: 12px; }
+      .hud { gap: 5px; }
+      .badge { padding: 6px 2px; border-radius: 12px; }
+      .badge span { font-size: 10px; }
+      .badge strong { font-size: 17px; }
+      #arena { height: 50dvh; min-height: 285px; max-height: 430px; border-radius: 19px; }
       .card { padding: 18px; }
-      .card h2 { font-size: 28px; }
-      .card p { font-size: 14px; line-height: 1.5; }
+      .card p { font-size: 14px; }
     }
 
     @media (max-height: 720px) and (max-width: 620px) {
-      h1 { font-size: 26px; }
-      .subtitle { display: none; }
-      .mode-btn small { display: none; }
-      #arena { height: 48dvh; min-height: 260px; }
+      h1 { font-size: 25px; }
+      .tip { display: none; }
+      .detail p { display: none; }
+      #arena { height: 48dvh; min-height: 245px; }
     }
   </style>
 </head>
 <body>
   <main class="app">
     <header>
-      <button class="lang-toggle" id="langBtn">EN</button>
+      <button class="lang" id="langBtn">EN</button>
       <h1 id="title">星果切切乐</h1>
-      <p class="subtitle" id="subtitle">像切水果一样划过星果得分，千万别切到炸弹。可选择计时赛、竞速赛和持久赛。</p>
+      <p class="tip" id="tip">单击查看模式，双击立即开始</p>
     </header>
 
-    <section class="mode-bar" aria-label="游戏模式选择">
-      <button class="mode-btn active" data-mode="time"><span class="mode-title"></span> <small class="mode-desc"></small></button>
-      <button class="mode-btn" data-mode="speed"><span class="mode-title"></span> <small class="mode-desc"></small></button>
-      <button class="mode-btn" data-mode="endless"><span class="mode-title"></span> <small class="mode-desc"></small></button>
+    <section class="modes" aria-label="游戏模式">
+      <button class="mode active" data-mode="time" id="mode-time">计时赛</button>
+      <button class="mode" data-mode="speed" id="mode-speed">竞速赛</button>
+      <button class="mode" data-mode="endless" id="mode-endless">持久赛</button>
+    </section>
+
+    <section class="detail show" id="detailBox">
+      <p id="detailText">60 秒内尽量拿高分。</p>
+      <button class="start-small" id="detailStart">开始</button>
     </section>
 
     <section class="hud">
@@ -389,12 +396,12 @@
     </section>
 
     <section id="arena" aria-label="游戏区域">
-      <div id="overlay" class="overlay">
+      <div class="overlay" id="overlay">
         <div class="card">
           <h2 id="cardTitle">准备开切！</h2>
-          <p id="modeIntro">计时赛：60 秒内尽量切更多星果。按住并滑动鼠标或手指，划过目标即可得分。</p>
-          <div class="action-row">
-            <button class="action-btn" id="startBtn">开始游戏</button>
+          <p id="cardText">单击模式看说明，双击模式直接开始。</p>
+          <div class="actions">
+            <button class="main-btn" id="startBtn">开始游戏</button>
           </div>
         </div>
       </div>
@@ -402,92 +409,70 @@
   </main>
 
   <script>
-    const arena = document.getElementById('arena');
-    const overlay = document.getElementById('overlay');
-    const startBtn = document.getElementById('startBtn');
-    const langBtn = document.getElementById('langBtn');
-    const titleEl = document.getElementById('title');
-    const subtitleEl = document.getElementById('subtitle');
-    const cardTitle = document.getElementById('cardTitle');
-    const scoreEl = document.getElementById('score');
-    const livesEl = document.getElementById('lives');
-    const timerEl = document.getElementById('timer');
-    const comboEl = document.getElementById('combo');
-    const scoreLabel = document.getElementById('scoreLabel');
-    const livesLabel = document.getElementById('livesLabel');
-    const comboLabel = document.getElementById('comboLabel');
-    const goalLabel = document.getElementById('goalLabel');
-    const modeIntro = document.getElementById('modeIntro');
-    const modeButtons = [...document.querySelectorAll('.mode-btn')];
+    const $ = id => document.getElementById(id);
 
-    const text = {
+    const arena = $('arena');
+    const overlay = $('overlay');
+    const langBtn = $('langBtn');
+    const titleEl = $('title');
+    const tipEl = $('tip');
+    const detailBox = $('detailBox');
+    const detailText = $('detailText');
+    const detailStart = $('detailStart');
+    const startBtn = $('startBtn');
+    const cardTitle = $('cardTitle');
+    const cardText = $('cardText');
+    const scoreEl = $('score');
+    const livesEl = $('lives');
+    const timerEl = $('timer');
+    const comboEl = $('combo');
+    const scoreLabel = $('scoreLabel');
+    const livesLabel = $('livesLabel');
+    const goalLabel = $('goalLabel');
+    const comboLabel = $('comboLabel');
+    const modeButtons = [...document.querySelectorAll('.mode')];
+
+    const copy = {
       zh: {
-        htmlLang: 'zh-CN',
+        langCode: 'zh-CN',
         pageTitle: '星果切切乐',
-        title: '星果切切乐',
         langBtn: 'EN',
-        subtitle: '像切水果一样划过星果得分，千万别切到炸弹。可选择计时赛、竞速赛和持久赛。',
+        title: '星果切切乐',
+        tip: '单击查看模式，双击立即开始',
         modes: {
-          time: { title: '计时赛', desc: '60 秒冲高分', intro: '计时赛：60 秒内尽量切更多星果。按住并滑动鼠标或手指，划过目标即可得分。' },
-          speed: { title: '竞速赛', desc: '最快切满 30 个', intro: '竞速赛：目标是最快切到 30 个星果，切到炸弹会扣时间和生命。' },
-          endless: { title: '持久赛', desc: '越玩越快', intro: '持久赛：没有固定时间，星果会越来越快，看看你能坚持多久。' }
+          time: ['计时赛', '60 秒内尽量拿高分。'],
+          speed: ['竞速赛', '最快切满 30 个目标。'],
+          endless: ['持久赛', '没有时间限制，速度会越来越快。']
         },
-        score: '分数',
-        lives: '生命',
-        time: '时间',
-        goal: '目标',
-        survival: '坚持',
-        combo: '连击',
-        ready: '准备开切！',
-        start: '开始游戏',
-        again: '再玩一次',
-        menu: '换模式',
-        chooseMode: '选择模式',
-        timeUp: '时间到！',
-        noLives: '生命用完啦！',
-        bomb: '炸弹爆炸！',
-        complete: '目标完成！',
-        lifeLost: '-生命',
-        scoreResult: score => `你的最终分数是 <strong>${score}</strong>。`,
-        comboResult: (score, combo) => `你的最终分数是 <strong>${score}</strong>，最高连击到 <strong>x${combo}</strong>。`,
-        speedResult: (elapsed, score) => `完成 30 个目标，用时 <strong>${elapsed}</strong> 秒！最终分数 <strong>${score}</strong>。`,
-        endlessResult: (elapsed, score) => `你坚持了 <strong>${Math.floor(elapsed)}</strong> 秒，最终分数 <strong>${score}</strong>。`
+        score: '分数', lives: '生命', time: '时间', goal: '目标', survive: '坚持', combo: '连击',
+        start: '开始', startGame: '开始游戏', ready: '准备开切！', readyText: '单击模式看说明，双击模式直接开始。',
+        again: '再玩一次', menu: '换模式',
+        timeUp: '时间到！', noLives: '生命用完啦！', bomb: '炸弹爆炸！', complete: '目标完成！', lifeLost: '-生命',
+        resultTime: (score, best) => `最终分数：<strong>${score}</strong><br>最高连击：<strong>x${best}</strong>`,
+        resultSpeed: (sec, score) => `完成 30 个目标！<br>用时：<strong>${sec}</strong> 秒<br>分数：<strong>${score}</strong>`,
+        resultEndless: (sec, score) => `坚持：<strong>${Math.floor(sec)}</strong> 秒<br>分数：<strong>${score}</strong>`
       },
       en: {
-        htmlLang: 'en',
+        langCode: 'en',
         pageTitle: 'Star Slice Rush',
-        title: 'Star Slice Rush',
         langBtn: '中文',
-        subtitle: 'Slice stars and fruit like a fruit-slicing game, but avoid the bombs. Choose Time Attack, Speed Run, or Survival.',
+        title: 'Star Slice Rush',
+        tip: 'Tap for details, double tap to start',
         modes: {
-          time: { title: 'Time Attack', desc: 'Score high in 60s', intro: 'Time Attack: slice as many stars and fruit as you can in 60 seconds. Hold and swipe with your mouse or finger to score.' },
-          speed: { title: 'Speed Run', desc: 'Slice 30 fast', intro: 'Speed Run: slice 30 targets as fast as possible. Bombs cost lives and add a time penalty.' },
-          endless: { title: 'Survival', desc: 'Gets faster', intro: 'Survival: no fixed time limit. The game gets faster and faster, so survive as long as you can.' }
+          time: ['Time Attack', 'Score as high as possible in 60 seconds.'],
+          speed: ['Speed Run', 'Slice 30 targets as fast as you can.'],
+          endless: ['Survival', 'No time limit. The game gets faster and faster.']
         },
-        score: 'Score',
-        lives: 'Lives',
-        time: 'Time',
-        goal: 'Goal',
-        survival: 'Survive',
-        combo: 'Combo',
-        ready: 'Ready to Slice!',
-        start: 'Start Game',
-        again: 'Play Again',
-        menu: 'Change Mode',
-        chooseMode: 'Choose Mode',
-        timeUp: 'Time Up!',
-        noLives: 'No Lives Left!',
-        bomb: 'Bomb Blast!',
-        complete: 'Goal Complete!',
-        lifeLost: '-Life',
-        scoreResult: score => `Your final score is <strong>${score}</strong>.`,
-        comboResult: (score, combo) => `Your final score is <strong>${score}</strong>, with a best combo of <strong>x${combo}</strong>.`,
-        speedResult: (elapsed, score) => `You sliced all 30 targets in <strong>${elapsed}</strong> seconds! Final score: <strong>${score}</strong>.`,
-        endlessResult: (elapsed, score) => `You survived for <strong>${Math.floor(elapsed)}</strong> seconds. Final score: <strong>${score}</strong>.`
+        score: 'Score', lives: 'Lives', time: 'Time', goal: 'Goal', survive: 'Survive', combo: 'Combo',
+        start: 'Start', startGame: 'Start Game', ready: 'Ready!', readyText: 'Tap a mode for details, double tap a mode to start.',
+        again: 'Again', menu: 'Modes',
+        timeUp: 'Time Up!', noLives: 'No Lives!', bomb: 'Bomb Blast!', complete: 'Goal Complete!', lifeLost: '-Life',
+        resultTime: (score, best) => `Final score: <strong>${score}</strong><br>Best combo: <strong>x${best}</strong>`,
+        resultSpeed: (sec, score) => `30 targets complete!<br>Time: <strong>${sec}</strong>s<br>Score: <strong>${score}</strong>`,
+        resultEndless: (sec, score) => `Survived: <strong>${Math.floor(sec)}</strong>s<br>Score: <strong>${score}</strong>`
       }
     };
 
-    const fruitList = ['⭐', '🌟', '🍎', '🍊', '🍉', '🍓', '🍍', '🥝'];
     let lang = localStorage.getItem('starSliceLang') || 'zh';
     let mode = 'time';
     let running = false;
@@ -498,66 +483,66 @@
     let comboTimer = 0;
     let timeLeft = 60;
     let elapsed = 0;
-    let targetCut = 30;
     let cutCount = 0;
     let items = [];
     let lastFrame = 0;
     let lastSpawn = 0;
-    let spawnEvery = 850;
     let slicing = false;
     let lastPoint = null;
     let timerId = null;
     let rafId = null;
+    let lastTapTime = 0;
+    let lastTapMode = '';
 
-    function t() { return text[lang]; }
-    function rect() { return arena.getBoundingClientRect(); }
+    const fruits = ['⭐', '🌟', '🍎', '🍊', '🍉', '🍓', '🍍', '🥝'];
+
+    function t() { return copy[lang]; }
     function rand(min, max) { return Math.random() * (max - min) + min; }
     function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+    function rect() { return arena.getBoundingClientRect(); }
 
     function applyLanguage() {
-      const copy = t();
-      document.documentElement.lang = copy.htmlLang;
-      document.title = copy.pageTitle;
-      titleEl.textContent = copy.title;
-      subtitleEl.textContent = copy.subtitle;
-      langBtn.textContent = copy.langBtn;
-      scoreLabel.textContent = copy.score;
-      livesLabel.textContent = copy.lives;
-      comboLabel.textContent = copy.combo;
-
-      modeButtons.forEach(btn => {
-        const item = copy.modes[btn.dataset.mode];
-        btn.querySelector('.mode-title').textContent = item.title;
-        btn.querySelector('.mode-desc').textContent = item.desc;
-      });
-
-      const startButton = document.getElementById('startBtn') || document.getElementById('startBtn2');
-      if (startButton) startButton.textContent = copy.start;
-      if (!running) {
-        const h2 = overlay.querySelector('h2');
-        if (h2) h2.textContent = overlay.dataset.result === 'true' ? h2.textContent : copy.ready;
-        const intro = overlay.querySelector('p');
-        if (intro && overlay.dataset.result !== 'true') intro.textContent = copy.modes[mode].intro;
-      }
+      const c = t();
+      document.documentElement.lang = c.langCode;
+      document.title = c.pageTitle;
+      langBtn.textContent = c.langBtn;
+      titleEl.textContent = c.title;
+      tipEl.textContent = c.tip;
+      scoreLabel.textContent = c.score;
+      livesLabel.textContent = c.lives;
+      comboLabel.textContent = c.combo;
+      detailStart.textContent = c.start;
+      startBtn.textContent = c.startGame;
+      cardTitle.textContent = c.ready;
+      cardText.textContent = c.readyText;
+      modeButtons.forEach(btn => btn.textContent = c.modes[btn.dataset.mode][0]);
+      showDetail(mode);
       updateHud();
     }
 
-    function setMode(nextMode) {
-      if (running) return;
+    function showDetail(nextMode) {
       mode = nextMode;
       modeButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.mode === mode));
-      overlay.dataset.result = 'false';
-      modeIntro.textContent = t().modes[mode].intro;
+      detailText.textContent = t().modes[mode][1];
+      detailBox.classList.add('show');
       updateHud();
     }
 
-    modeButtons.forEach(btn => btn.addEventListener('click', () => setMode(btn.dataset.mode)));
-
-    langBtn.addEventListener('click', () => {
-      lang = lang === 'zh' ? 'en' : 'zh';
-      localStorage.setItem('starSliceLang', lang);
-      applyLanguage();
-    });
+    function updateHud() {
+      scoreEl.textContent = score;
+      livesEl.textContent = lives;
+      comboEl.textContent = 'x' + combo;
+      if (mode === 'time') {
+        goalLabel.textContent = t().time;
+        timerEl.textContent = Math.max(0, Math.ceil(timeLeft)) + 's';
+      } else if (mode === 'speed') {
+        goalLabel.textContent = t().goal;
+        timerEl.textContent = cutCount + '/30';
+      } else {
+        goalLabel.textContent = t().survive;
+        timerEl.textContent = Math.floor(elapsed) + 's';
+      }
+    }
 
     function resetGame() {
       items.forEach(item => item.el.remove());
@@ -572,55 +557,18 @@
       elapsed = 0;
       cutCount = 0;
       lastSpawn = 0;
-      spawnEvery = mode === 'speed' ? 620 : 820;
       updateHud();
     }
 
-    function updateHud() {
-      scoreEl.textContent = score;
-      livesEl.textContent = lives;
-      comboEl.textContent = 'x' + combo;
-      if (mode === 'time') {
-        goalLabel.textContent = t().time;
-        timerEl.textContent = Math.max(0, Math.ceil(timeLeft)) + 's';
-      }
-      if (mode === 'speed') {
-        goalLabel.textContent = t().goal;
-        timerEl.textContent = cutCount + '/' + targetCut;
-      }
-      if (mode === 'endless') {
-        goalLabel.textContent = t().survival;
-        timerEl.textContent = Math.floor(elapsed) + 's';
-      }
-    }
-
-    function spawnItem() {
-      const r = rect();
-      const isBad = Math.random() < (mode === 'endless' ? .24 : .18);
-      const size = rand(42, 64);
-      const el = document.createElement('div');
-      el.className = 'item ' + (isBad ? 'bad' : 'good');
-      el.textContent = isBad ? '💣' : pick(fruitList);
-      el.style.setProperty('--size', size + 'px');
-      el.style.setProperty('--rot', rand(-25, 25) + 'deg');
-      arena.appendChild(el);
-
-      const fromLeft = Math.random() < .5;
-      const x = fromLeft ? rand(20, r.width * .35) : rand(r.width * .65, r.width - 20);
-      const y = r.height + size;
-      const vx = (fromLeft ? 1 : -1) * rand(40, 155);
-      const power = mode === 'endless' ? Math.min(980, 720 + elapsed * 8) : rand(690, 850);
-      const vy = -power;
-
-      items.push({ el, x, y, vx, vy, size, bad: isBad, cut: false, rot: rand(-180, 180), rotSpeed: rand(-220, 220) });
-    }
-
-    function startGame() {
+    function startGame(selectedMode = mode) {
+      mode = selectedMode;
+      showDetail(mode);
       resetGame();
       running = true;
-      overlay.dataset.result = 'false';
+      slicing = false;
       overlay.style.display = 'none';
       modeButtons.forEach(btn => btn.disabled = true);
+      detailStart.disabled = true;
       lastFrame = performance.now();
       clearInterval(timerId);
       timerId = setInterval(() => {
@@ -642,52 +590,70 @@
       clearInterval(timerId);
       cancelAnimationFrame(rafId);
       modeButtons.forEach(btn => btn.disabled = false);
+      detailStart.disabled = false;
 
-      let extra = '';
-      if (mode === 'speed' && cutCount >= targetCut) extra = `<p>${t().speedResult(elapsed, score)}</p>`;
-      else if (mode === 'endless') extra = `<p>${t().endlessResult(elapsed, score)}</p>`;
-      else extra = `<p>${t().comboResult(score, bestCombo)}</p>`;
+      let result;
+      if (mode === 'speed' && cutCount >= 30) result = t().resultSpeed(elapsed, score);
+      else if (mode === 'endless') result = t().resultEndless(elapsed, score);
+      else result = t().resultTime(score, bestCombo);
 
-      overlay.dataset.result = 'true';
       overlay.innerHTML = `
         <div class="card">
           <h2>${title}</h2>
-          ${extra}
-          <div class="action-row">
-            <button class="action-btn" id="againBtn">${t().again}</button>
-            <button class="action-btn secondary" id="menuBtn">${t().menu}</button>
+          <p>${result}</p>
+          <div class="actions">
+            <button class="main-btn" id="againBtn">${t().again}</button>
+            <button class="ghost-btn" id="menuBtn">${t().menu}</button>
           </div>
         </div>
       `;
       overlay.style.display = 'grid';
-      document.getElementById('againBtn').addEventListener('click', startGame);
-      document.getElementById('menuBtn').addEventListener('click', showMenu);
+      $('againBtn').addEventListener('click', () => startGame(mode));
+      $('menuBtn').addEventListener('click', restoreOverlay);
     }
 
-    function showMenu() {
-      overlay.dataset.result = 'false';
+    function restoreOverlay() {
       overlay.innerHTML = `
         <div class="card">
-          <h2>${t().chooseMode}</h2>
-          <p id="modeIntro">${t().modes[mode].intro}</p>
-          <div class="action-row">
-            <button class="action-btn" id="startBtn2">${t().start}</button>
+          <h2 id="cardTitle">${t().ready}</h2>
+          <p id="cardText">${t().readyText}</p>
+          <div class="actions">
+            <button class="main-btn" id="startBtn">${t().startGame}</button>
           </div>
         </div>
       `;
-      document.getElementById('startBtn2').addEventListener('click', startGame);
+      $('startBtn').addEventListener('click', () => startGame(mode));
+      overlay.style.display = 'grid';
+    }
+
+    function spawnItem() {
+      const r = rect();
+      const bad = Math.random() < (mode === 'endless' ? .24 : .18);
+      const size = rand(40, 62);
+      const el = document.createElement('div');
+      el.className = 'item ' + (bad ? 'bad' : 'good');
+      el.textContent = bad ? '💣' : pick(fruits);
+      el.style.setProperty('--size', size + 'px');
+      arena.appendChild(el);
+
+      const fromLeft = Math.random() < .5;
+      const x = fromLeft ? rand(25, r.width * .35) : rand(r.width * .65, r.width - 25);
+      const y = r.height + size;
+      const vx = (fromLeft ? 1 : -1) * rand(35, 150);
+      const vy = mode === 'endless' ? -Math.min(980, 700 + elapsed * 8) : -rand(680, 840);
+      items.push({ el, x, y, vx, vy, size, bad, cut: false, rot: rand(-180, 180), rotSpeed: rand(-220, 220) });
     }
 
     function loop(now) {
       if (!running) return;
       const dt = Math.min((now - lastFrame) / 1000, .033);
       lastFrame = now;
-
       comboTimer -= dt;
       if (comboTimer <= 0) combo = 1;
 
-      const difficulty = mode === 'endless' ? Math.min(420, elapsed * 8) : score * .5;
-      const interval = Math.max(mode === 'speed' ? 300 : 360, spawnEvery - difficulty);
+      const base = mode === 'speed' ? 620 : 820;
+      const difficulty = mode === 'endless' ? Math.min(440, elapsed * 8) : Math.min(350, score * .45);
+      const interval = Math.max(mode === 'speed' ? 300 : 350, base - difficulty);
       if (now - lastSpawn > interval) {
         spawnItem();
         if (Math.random() < .18) setTimeout(() => running && spawnItem(), 120);
@@ -716,36 +682,33 @@
           items.splice(i, 1);
         }
       }
-
       updateHud();
       rafId = requestAnimationFrame(loop);
     }
 
     function pointFromEvent(e) {
       const r = rect();
-      const touch = e.touches ? e.touches[0] : e;
-      return { x: touch.clientX - r.left, y: touch.clientY - r.top };
+      return { x: e.clientX - r.left, y: e.clientY - r.top };
     }
 
     function distToSegment(px, py, ax, ay, bx, by) {
       const dx = bx - ax, dy = by - ay;
       const len2 = dx * dx + dy * dy || 1;
-      let t = ((px - ax) * dx + (py - ay) * dy) / len2;
-      t = Math.max(0, Math.min(1, t));
-      const x = ax + t * dx, y = ay + t * dy;
+      let s = ((px - ax) * dx + (py - ay) * dy) / len2;
+      s = Math.max(0, Math.min(1, s));
+      const x = ax + s * dx, y = ay + s * dy;
       return Math.hypot(px - x, py - y);
     }
 
     function drawSlash(a, b) {
-      const length = Math.hypot(b.x - a.x, b.y - a.y);
-      if (length < 8) return;
-      const angle = Math.atan2(b.y - a.y, b.x - a.x) + 'rad';
+      const len = Math.hypot(b.x - a.x, b.y - a.y);
+      if (len < 8) return;
       const el = document.createElement('div');
       el.className = 'slash';
       el.style.left = a.x + 'px';
       el.style.top = a.y + 'px';
-      el.style.width = length + 'px';
-      el.style.setProperty('--angle', angle);
+      el.style.width = len + 'px';
+      el.style.setProperty('--angle', Math.atan2(b.y - a.y, b.x - a.x) + 'rad');
       arena.appendChild(el);
       setTimeout(() => el.remove(), 300);
     }
@@ -755,8 +718,7 @@
       for (let i = items.length - 1; i >= 0; i--) {
         const item = items[i];
         if (item.cut) continue;
-        const d = distToSegment(item.x, item.y, a.x, a.y, b.x, b.y);
-        if (d < item.size * .55) cutItem(item, i);
+        if (distToSegment(item.x, item.y, a.x, a.y, b.x, b.y) < item.size * .55) cutItem(item, i);
       }
     }
 
@@ -764,7 +726,7 @@
       item.cut = true;
       item.el.remove();
       items.splice(index, 1);
-      burst(item.x, item.y, item.bad ? '#ff5e7a' : '#ffd56a');
+      burst(item.x, item.y, item.bad ? '#ff5e7a' : '#ffd76d');
 
       if (item.bad) {
         lives -= 1;
@@ -777,15 +739,14 @@
         return;
       }
 
-      const gain = 10 * combo;
+      const gain = combo * 10;
       score += gain;
       cutCount += 1;
-      pop(item.x, item.y, '+' + gain, '#fff3aa');
+      pop(item.x, item.y, '+' + gain, '#fff0a6');
       combo = Math.min(9, combo + 1);
       bestCombo = Math.max(bestCombo, combo);
       comboTimer = .9;
-
-      if (mode === 'speed' && cutCount >= targetCut) endGame(t().complete);
+      if (mode === 'speed' && cutCount >= 30) endGame(t().complete);
     }
 
     function pop(x, y, message, color) {
@@ -815,8 +776,10 @@
 
     function startSlice(e) {
       if (!running) return;
+      e.preventDefault();
       slicing = true;
       lastPoint = pointFromEvent(e);
+      arena.setPointerCapture?.(e.pointerId);
     }
 
     function moveSlice(e) {
@@ -832,16 +795,39 @@
       lastPoint = null;
     }
 
+    modeButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (running) return;
+        const now = Date.now();
+        const selected = btn.dataset.mode;
+        if (lastTapMode === selected && now - lastTapTime < 330) {
+          startGame(selected);
+          lastTapTime = 0;
+          return;
+        }
+        lastTapMode = selected;
+        lastTapTime = now;
+        showDetail(selected);
+      });
+    });
+
+    langBtn.addEventListener('click', () => {
+      lang = lang === 'zh' ? 'en' : 'zh';
+      localStorage.setItem('starSliceLang', lang);
+      applyLanguage();
+      if (!running && overlay.style.display !== 'none') restoreOverlay();
+    });
+
+    detailStart.addEventListener('click', () => startGame(mode));
+    startBtn.addEventListener('click', () => startGame(mode));
     arena.addEventListener('pointerdown', startSlice);
     arena.addEventListener('pointermove', moveSlice);
     window.addEventListener('pointerup', endSlice);
-    arena.addEventListener('touchstart', startSlice, { passive: false });
-    arena.addEventListener('touchmove', moveSlice, { passive: false });
-    window.addEventListener('touchend', endSlice);
+    window.addEventListener('pointercancel', endSlice);
 
-    startBtn.addEventListener('click', startGame);
-    setMode('time');
     applyLanguage();
+    showDetail('time');
+    updateHud();
   </script>
 </body>
 </html>
