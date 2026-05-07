@@ -58,7 +58,7 @@
       height: min(94vh, 760px);
       height: min(94dvh, 760px);
       display: grid;
-      grid-template-rows: auto auto 1fr;
+      grid-template-rows: auto auto auto minmax(340px, 1fr);
       gap: 10px;
       z-index: 1;
       padding: 12px;
@@ -162,6 +162,7 @@
 
     #arena {
       position: relative;
+      min-height: 340px;
       overflow: hidden;
       border-radius: 28px;
       border: 1px solid rgba(255,255,255,.22);
